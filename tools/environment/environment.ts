@@ -1,6 +1,6 @@
 export default {
   mongoUrl:
-    'mongodb+srv://udemy:Udemy_123@nestjs-jcbid.mongodb.net/test?retryWrites=true&w=majority',
+    'mongodb://localhost:27017/nestjs?retryWrites=true',
   hashText: 'myStrongPasswordHashText',
   jwtText: '32dhfnct94q',
   cloudinary: {

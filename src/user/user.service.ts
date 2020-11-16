@@ -1,48 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { UserModel } from '../../tools/models/user.model';
-import { UserCreateDto } from '../../tools/dtos/user.dto';
-const result: UserModel[] = [];
+import { InjectModel } from "@nestjs/mongoose";
+import {Model} from "mongoose";
+import {ResourceService} from "../../libs/services/resource.service";
+import {UserModel} from "../../tools/models/user.model";
+import {UserCreateDto, UserUpdateDto} from "../../tools/dtos/user.dto";
 @Injectable()
-export class UserService {
-  getAllUsers(): UserModel[] {
-    if (result.length === 0) {
-      this.creatingMockUser({
-        birthDay: new Date(),
-        email: 'ahmetaydin@udemy.com.tr',
-        name: 'Ahmet',
-        surname: 'Aydın',
-        password: '123123',
-      });
-    }
-    return result;
+export class UserService extends ResourceService<UserModel, UserCreateDto, UserUpdateDto>{
+  constructor(@InjectModel('User')  userMongo: Model<any>) {
+    super(userMongo)
   }
 
-  getUserById(id: string): UserModel | string {
-    const user = result.find(res => res.id === id);
-    if (!user) {
-      return 'User Does not Exist';
-    }
-    return user;
-  }
-
-  createUser(body: UserCreateDto) {
-    const isExist = result.find((res) => res.email === body.email);
-    if (isExist) {
-      return isExist;
-    } else {
-      this.creatingMockUser(body);
-      return result.slice(result.length - 1, result.length);
-    }
-  }
-
-  private creatingMockUser(data: any) {
-    const user: UserModel = new UserModel();
-    user.birthDay = data.birthDay;
-    user.email = data.email;
-    user.name = data.name;
-    user.surname = data.surname;
-    user.password = data.password;
-    user.id = (Math.floor(Math.random() * 60) + 1).toString();
-    result.push(user);
-  }
 }
